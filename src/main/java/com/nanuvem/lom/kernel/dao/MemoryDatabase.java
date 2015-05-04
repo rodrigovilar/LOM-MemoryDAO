@@ -13,8 +13,7 @@ import com.nanuvem.lom.api.Instance;
 public class MemoryDatabase {
 
 	private HashMap<Long, Entity> entitiesById = new HashMap<Long, Entity>();
-    private HashMap<Long, List<Instance>> instancesByEntityId = new HashMap<Long, List<Instance>>();
-	
+	private HashMap<Long, List<Instance>> instancesByEntityId = new HashMap<Long, List<Instance>>();
 
 	public void addEntity(Entity entity) {
 		entitiesById.put(entity.getId(), entity);
@@ -131,13 +130,26 @@ public class MemoryDatabase {
 		instance.setEntity(entity);
 		getInstances(entity.getId()).add(instance);
 	}
-	
+
+	public void updateInstance(Instance instance) {
+		Entity entity = findEntityById(instance.getEntity().getId());
+		List<Instance> instances = getInstances(entity.getId());
+
+		for (int i = 0; i < instances.size(); i++) {
+			if (instances.get(i).getId().equals(instance.getId())) {
+				instances.remove(i);
+				instances.add(i, instance);
+				break;
+			}
+		}
+	}
+
 	public List<Instance> getInstances(Long idEntity) {
-	    if (instancesByEntityId.get(idEntity) == null) {
-	        instancesByEntityId.put(idEntity, new ArrayList<Instance>());
-	    }
-	    
-	    return instancesByEntityId.get(idEntity);
+		if (instancesByEntityId.get(idEntity) == null) {
+			instancesByEntityId.put(idEntity, new ArrayList<Instance>());
+		}
+
+		return instancesByEntityId.get(idEntity);
 	}
 
 	public void addAttributeValue(AttributeValue value) {
@@ -154,7 +166,22 @@ public class MemoryDatabase {
 				}
 			}
 		}
-		
+		return null;
+	}
+
+	public AttributeValue updateAttributeValue(AttributeValue value) {
+		Instance instance = findInstanceById(value.getInstance().getId());
+
+		for (AttributeValue attributeValue : instance.getValues()) {
+			if (value.getId().equals(attributeValue.getId())) {
+				attributeValue.setAttribute(value.getAttribute());
+				attributeValue.setInstance(value.getInstance());
+				attributeValue.setValue(value.getValue());
+				attributeValue.setVersion(attributeValue.getVersion() + 1);
+
+				return attributeValue;
+			}
+		}
 		return null;
 	}
 

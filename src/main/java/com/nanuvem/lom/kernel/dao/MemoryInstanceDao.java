@@ -56,8 +56,9 @@ public class MemoryInstanceDao implements InstanceDao {
     }
 
 	public Instance update(Instance instance) {
-		// TODO Auto-generated method stub
-		return null;
+		instance.setVersion((instance.getVersion() + 1));
+		memoryDatabase.updateInstance(instance);
+		return instance;		
 	}
 
 	public void delete(Long id) {
