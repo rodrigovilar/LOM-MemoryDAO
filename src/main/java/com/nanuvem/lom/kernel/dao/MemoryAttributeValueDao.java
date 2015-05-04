@@ -20,4 +20,8 @@ public class MemoryAttributeValueDao implements AttributeValueDao {
 		
 		return value;
 	}
+
+	public AttributeValue update(AttributeValue value) {
+		return memoryDatabase.updateAttributeValue(value);
+	}
 }
